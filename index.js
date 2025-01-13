@@ -48,9 +48,23 @@ app.delete("/movies/:id", async (req, res) => {
             message: "Movie deleted successfully",
             movie: deletedMovie
         })
-
     } catch (error) {
         res.status(500).json({ error: "Internal server error"})
+    }
+})
+
+app.put("/movies/:id", async (req, res) => {
+    const movieId = req.params.id
+    const updatedMovieData = req.body
+
+    try {
+        const updatedMovie = await Movie.findByIdAndUpdate(movieId, updatedMovieData, { new: true })
+        if(!updatedMovie) {
+            res.status(404).json({ error: "Movie not found" })
+        }
+        res.status(200).json(updatedMovie)
+    } catch (error) {
+        res.status(500).json({ error: "Internal server error" })
     }
 })
 
